@@ -1,8 +1,7 @@
 package com.twilio.phonetree.servlet.commuter;
 
-import com.twilio.phonetree.servlet.common.Redirect;
-import com.twilio.twiml.Dial;
-import com.twilio.twiml.Number;
+import com.twilio.twiml.Gather;
+import com.twilio.twiml.Say;
 import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.VoiceResponse;
 
@@ -10,8 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ConnectServlet extends HttpServlet {
 
@@ -20,28 +17,24 @@ public class ConnectServlet extends HttpServlet {
             throws IOException {
 
         String selectedOption = servletRequest.getParameter("Digits");
-        Map<String, String> optionPhones = new HashMap<>();
-        optionPhones.put("2", "+12024173378");
-        optionPhones.put("3", "+12027336386");
-        optionPhones.put("4", "+12027336637");
-
-        VoiceResponse twiMLResponse = optionPhones.containsKey(selectedOption)
-                ? dial(optionPhones.get(selectedOption))
-                : Redirect.toMainMenu();
+        VoiceResponse response = new VoiceResponse.Builder()
+                .gather(new Gather.Builder()
+                        .action("/reset/pin")
+                        .numDigits(1)
+                        .build()).say(new Say.Builder(
+                        "You have entered "+ selectedOption +". Press 1 to confirm. 2 to retry.")
+                        .voice(Say.Voice.ALICE)
+                        .language(Say.Language.EN_GB)
+                        .build())
+                        .build();
 
         servletResponse.setContentType("text/xml");
         try {
-            servletResponse.getWriter().write(twiMLResponse.toXml());
+            servletResponse.getWriter().write(response.toXml());
         } catch (TwiMLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private VoiceResponse dial(String phoneNumber) {
-        Number number = new Number.Builder(phoneNumber).build();
-        return new VoiceResponse.Builder()
-                .dial(new Dial.Builder().number(number).build())
-                .build();
-    }
 }
 

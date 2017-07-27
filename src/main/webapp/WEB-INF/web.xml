@@ -19,6 +19,10 @@
         <servlet-name>commuter-connect</servlet-name>
         <servlet-class>com.twilio.phonetree.servlet.commuter.ConnectServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>reset-pin</servlet-name>
+        <servlet-class>com.twilio.phonetree.servlet.reset.PinServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ivr-welcome</servlet-name>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>commuter-connect</servlet-name>
         <url-pattern>/commuter/connect</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>reset-pin</servlet-name>
+        <url-pattern>/reset/pin</url-pattern>
     </servlet-mapping>
 
     <filter>

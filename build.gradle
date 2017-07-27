@@ -11,7 +11,7 @@ checkstyle {
 }
 
 gretty {
-    httpPort = 8080
+    httpPort = 8088
     contextPath = ''
     logbackConfigFile = "src/main/resources/logback.xml"
     servletContainer = "jetty9"

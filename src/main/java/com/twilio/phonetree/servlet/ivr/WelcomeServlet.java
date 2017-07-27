@@ -1,9 +1,6 @@
 package com.twilio.phonetree.servlet.ivr;
 
-import com.twilio.twiml.Gather;
-import com.twilio.twiml.Play;
-import com.twilio.twiml.TwiMLException;
-import com.twilio.twiml.VoiceResponse;
+import com.twilio.twiml.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +16,14 @@ public class WelcomeServlet extends HttpServlet {
                 .gather(new Gather.Builder()
                         .action("/menu/show")
                         .numDigits(1)
+                        .build()).say(new Say.Builder(
+                        "Welcome to Verizon Telematics. Press 1 for RESET PIN menu. Press 2 for owner verification. To talk to a customer service representative press 0")
+                        .voice(Say.Voice.ALICE)
+                        .language(Say.Language.EN_GB)
                         .build())
-                .play(new Play.Builder("http://howtodocs.s3.amazonaws.com/et-phone.mp3")
+                /*.play(new Play.Builder("http://howtodocs.s3.amazonaws.com/et-phone.mp3")
                         .loop(3)
-                        .build())
+                        .build())*/
                 .build();
 
         servletResponse.setContentType("text/xml");

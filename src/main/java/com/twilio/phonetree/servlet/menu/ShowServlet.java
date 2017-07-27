@@ -1,11 +1,7 @@
 package com.twilio.phonetree.servlet.menu;
 
 
-import com.twilio.twiml.Gather;
-import com.twilio.twiml.Hangup;
-import com.twilio.twiml.Say;
-import com.twilio.twiml.TwiMLException;
-import com.twilio.twiml.VoiceResponse;
+import com.twilio.twiml.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,10 +19,10 @@ public class ShowServlet extends HttpServlet {
         VoiceResponse response;
         switch (selectedOption) {
             case "1":
-                response = getReturnInstructions();
+                response = initiateResetPin();
                 break;
             case "2":
-                response = getPlanets();
+                response = initiateOwnerVerification();
                 break;
             default:
                 response = com.twilio.phonetree.servlet.common.Redirect.toMainMenu();
@@ -40,14 +36,24 @@ public class ShowServlet extends HttpServlet {
         }
     }
 
-    private VoiceResponse getReturnInstructions() {
-
+    private VoiceResponse initiateResetPin() {
         VoiceResponse response = new VoiceResponse.Builder()
+                .gather(new Gather.Builder()
+                        .action("/commuter/connect")
+                        .numDigits(4)
+                        .build()).say(new Say.Builder(
+                        "please enter a 4 digit pin")
+                        .voice(Say.Voice.ALICE)
+                        .language(Say.Language.EN_GB)
+                        .build())
+                /*.play(new Play.Builder("http://howtodocs.s3.amazonaws.com/et-phone.mp3")
+                        .loop(3)
+                        .build())*/
+                .build();
+
+      /*  VoiceResponse response = new VoiceResponse.Builder()
                 .say(new Say.Builder(
-                        "To get to your extraction point, get on your bike and go down "
-                        + "the street. Then Left down an alley. Avoid the police cars. Turn left "
-                        + "into an unfinished housing development. Fly over the roadblock. Go "
-                        + "passed the moon. Soon after you will see your mother ship.")
+                        "Enter 4 digits for new pin")
                         .voice(Say.Voice.ALICE)
                         .language(Say.Language.EN_GB)
                         .build())
@@ -56,14 +62,14 @@ public class ShowServlet extends HttpServlet {
                         + "adventurous alien's first choice in intergalactic travel")
                         .build())
                 .hangup(new Hangup())
-                .build();
+                .build();*/
 
         return response;
     }
 
-    private VoiceResponse getPlanets() {
+    private VoiceResponse initiateOwnerVerification() {
 
-        VoiceResponse response = new VoiceResponse.Builder()
+        /*VoiceResponse response = new VoiceResponse.Builder()
                 .gather(new Gather.Builder()
                         .action("/commuter/connect")
                         .numDigits(1)
@@ -76,7 +82,18 @@ public class ShowServlet extends HttpServlet {
                         .language(Say.Language.EN_GB)
                         .loop(3)
                         .build()
-                ).build();
+                ).build();*/
+        VoiceResponse response = new VoiceResponse.Builder()
+                .say(new Say.Builder(
+                        "owner Verification successful")
+                        .voice(Say.Voice.ALICE)
+                        .language(Say.Language.EN_GB)
+                        .build())
+                .say(new Say.Builder(
+                        "Thank you for calling. goodbye. ")
+                        .build())
+                .hangup(new Hangup())
+                .build();
 
         return response;
     }
